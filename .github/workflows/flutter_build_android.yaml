@@ -25,19 +25,9 @@ on:
         required: true
       android_key_properties_passphrase:
         required: true
-      android_keystore_private_key_password:
-        required: true
       android_keystore_password:
         required: true
       play_store_gservice_account:
-        required: true
-      ios_keychain_password:
-        required: true
-      ios_provisioning_profile_asc:
-        required: true
-      ios_signing_key_asc:
-        required: true
-      ios_signing_key_password:
         required: true
 
 jobs:
