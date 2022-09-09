@@ -19,6 +19,10 @@ on:
         required: false
         default: ''
         type: string
+      custom_build_args:
+        required: false
+        default: ''
+        type: string
 
     secrets:
       ios_provisioning_profile_password:
