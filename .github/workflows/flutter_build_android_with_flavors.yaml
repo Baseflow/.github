@@ -19,6 +19,10 @@ on:
         required: false
         default: ''
         type: string
+      custom_build_args:
+        required: false
+        default: ''
+        type: string
 
     secrets:
       android_key_asc:
@@ -56,7 +60,7 @@ jobs:
           gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
         working-directory: ${{ inputs.app-dir }}/android
       - name: Android Build
-        run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }}
+        run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - name: Release APPBUNDLE to internal track
         uses: r0adkll/upload-google-play@v1.0.16
         with:
