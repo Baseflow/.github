@@ -15,6 +15,10 @@ on:
         required: false
         default: 'lib/main.dart'
         type: string
+      pre_build_script:
+        required: false
+        default: ''
+        type: string
 
     secrets:
       ios_provisioning_profile_password:
@@ -42,6 +46,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: Prebuild Script
+        run: sh ${{inputs.pre_build_script}}
       - name: Flutter Packages Get
         run: flutter packages get
       - name: Install the Apple certificate and provisioning profile
