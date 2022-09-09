@@ -48,7 +48,7 @@ jobs:
         with:
           channel: 'stable'
       - name: Prebuild Script
-        if: ${{ pre_build_script != ''}}
+        if: ${{ inputs.pre_build_script != ''}}
         run: sh ${{inputs.pre_build_script}}
       - name: Flutter Packages Get
         run: flutter packages get
