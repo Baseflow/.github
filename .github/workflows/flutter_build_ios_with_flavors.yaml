@@ -96,7 +96,7 @@ jobs:
         working-directory: ${{ inputs.app-dir }}
       - run: |
           ls -la ./ios
-          ls -la ./build
+          ls -la ./build/ios
           ls -la ./build/ios/ipa
         working-directory: ${{ inputs.app-dir }}
       - name: 'Upload app to TestFlight'
