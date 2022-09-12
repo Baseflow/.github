@@ -97,6 +97,8 @@ jobs:
       - run: |
           ls -la ./ios
           ls -la ./build/ios
+          ls -la ./build/archive
+          ls -la ./build/ios
         working-directory: ${{ inputs.app-dir }}
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v1
