@@ -19,6 +19,10 @@ on:
         required: false
         default: ''
         type: string
+      pre_build_params:
+        required: false
+        default: ''
+        type: string
       custom_build_args:
         required: false
         default: ''
@@ -49,7 +53,7 @@ jobs:
           channel: 'stable'
       - name: Prebuild Script
         if: ${{ inputs.pre_build_script != ''}}
-        run: sh ${{inputs.pre_build_script}}
+        run: sh ${{inputs.pre_build_script}} ${{inputs.pre_build_params}}
       - name: Flutter Packages Get
         run: flutter packages get
       - name: Decrypt keystore
