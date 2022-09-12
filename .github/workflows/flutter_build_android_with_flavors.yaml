@@ -19,10 +19,6 @@ on:
         required: false
         default: ''
         type: string
-      pre_build_params:
-        required: false
-        default: ''
-        type: string
       custom_build_args:
         required: false
         default: ''
@@ -39,6 +35,8 @@ on:
         required: true
       play_store_gservice_account:
         required: true
+      pre_build_params:
+        required: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,7 +51,7 @@ jobs:
           channel: 'stable'
       - name: Prebuild Script
         if: ${{ inputs.pre_build_script != ''}}
-        run: sh ${{inputs.pre_build_script}} ${{inputs.pre_build_params}}
+        run: sh ${{inputs.pre_build_script}} ${{secrets.pre_build_params}}
       - name: Flutter Packages Get
         run: flutter packages get
       - name: Decrypt keystore
