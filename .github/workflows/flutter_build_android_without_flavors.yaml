@@ -1,0 +1,70 @@
+name: Deploy Android
+on:
+  workflow_call:
+    inputs:
+      app-dir:
+        required: true
+        type: string
+      packageName: # this should be optional.. https://github.com/r0adkll/upload-google-play/issues/103
+        required: true
+        type: string
+      target:
+        required: false
+        default: 'lib/main.dart'
+        type: string
+      pre_build_script:
+        required: false
+        default: ''
+        type: string
+      custom_build_args:
+        required: false
+        default: ''
+        type: string
+
+    secrets:
+      android_key_asc:
+        required: true
+      android_key_passphrase:
+        required: true
+      android_keystore_asc:
+        required: true
+      android_keystore_passphrase:
+        required: true
+      play_store_gservice_account:
+        required: true
+      pre_build_params:
+        required: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options java-version
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Prebuild Script
+        if: ${{ inputs.pre_build_script != ''}}
+        run: sh ${{inputs.pre_build_script}} ${{secrets.pre_build_params}}
+      - name: Flutter Packages Get
+        run: flutter packages get
+      - name: Decrypt keystore
+        run: |
+          echo "${{secrets.android_key_asc}}" > key.properties.asc
+          echo "${{secrets.android_keystore_asc}}" > upload-keystore.jks.asc
+          gpg -d --passphrase "${{ secrets.android_key_passphrase }}" --batch key.properties.asc > key.properties
+          gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
+        working-directory: ${{ inputs.app-dir }}/android
+      - name: Android Build
+        run: flutter build appbundle --release --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
+      - name: Release APPBUNDLE to internal track
+        uses: r0adkll/upload-google-play@v1.0.16
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.play_store_gservice_account }}
+          releaseFile: ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release/app-${{inputs.environment}}-release.aab
+          status: 'draft'
+          track: internal
+          packageName: ${{inputs.packageName}}
