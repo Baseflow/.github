@@ -75,7 +75,10 @@ jobs:
         if: ${{ inputs.build_number_api_url != '' }}
         run: touch count.json && curl ${{ inputs.build_number_api_url }} > count.json && cat count.json | jq .value && export GITHUB_RUN_NUMBER=$(cat count.json | jq .value)
       - name: Android Build
-        run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
+        run: |
+          export BUILD_NUMBER=$GITHUB_RUN_NUMBER
+          test -f count.json && export NUMBER=$(cat count.json | jq .value)
+          flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$BUILD_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - name: Sign app APK
         run: jarsigner --keystore ./android/upload-keystore.jks -storepass $(awk -F "=" '/^keyPassword/{print $NF}' android/key.properties) build/app/outputs/bundle/stagingRelease/app-staging-release.aab $(awk -F "=" '/^keyAlias/{print $NF}' android/key.properties)
       - name: Release APPBUNDLE to internal track
