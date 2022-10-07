@@ -69,8 +69,7 @@ jobs:
         working-directory: ${{ inputs.app-dir }}/android
       - name: Android Build
         run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
-      - uses: r0adkll/sign-android-release@v1
-        name: Sign app APK
+      - name: Sign app APK
         run: jarsigner --keystore ./android/upload-keystore.jks -storepass $(awk -F "=" '/^keyPassword/{print $NF}' android/key.properties) build/app/outputs/bundle/stagingRelease/app-staging-release.aab $(awk -F "=" '/^keyAlias/{print $NF}' android/key.properties)
       - name: Release APPBUNDLE to internal track
         uses: r0adkll/upload-google-play@v1.0.16
