@@ -69,16 +69,14 @@ jobs:
         working-directory: ${{ inputs.app-dir }}/android
       - name: Android Build
         run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
-      - name: print stuff
-        run: echo $ALIAS && echo $KEY
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         with:
           releaseDirectory: ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release
-          signingKeyBase64: $BASE64_STORE
-          alias: $ALIAS
-          keyStorePassword: $KEY
-          keyPassword: $KEY
+          signingKeyBase64: $(openssl base64 < upload-keystore.jks | tr -d '\n' | tee upload-keystore.jks.base64.txt)
+          alias: $(awk -F "=" '/^keyAlias/{print $NF}' key.properties)
+          keyStorePassword: $(awk -F "=" '/^storeFile/{print $NF}' key.properties)
+          keyPassword: $(awk -F "=" '/^storeFile/{print $NF}' key.properties)
       - name: Release APPBUNDLE to internal track
         uses: r0adkll/upload-google-play@v1.0.16
         with:
