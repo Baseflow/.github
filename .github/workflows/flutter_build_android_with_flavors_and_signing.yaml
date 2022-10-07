@@ -23,6 +23,10 @@ on:
         required: false
         default: ''
         type: string
+      build_number_api_url:
+        required: false
+        default: ''
+        type: string
 
     secrets:
       android_key_asc:
@@ -67,6 +71,9 @@ jobs:
           export STORE_FILE=$(awk -F "=" '/^storeFile/{print $NF}' key.properties)
           export BASE64_STORE=$(openssl base64 < upload-keystore.jks | tr -d '\n' | tee upload-keystore.jks.base64.txt)
         working-directory: ${{ inputs.app-dir }}/android
+      - name: Fetch Build Number
+        if: ${{ inputs.build_number_api_url != '' }}
+        run: touch count.json && curl ${{ inputs.build_number_api_url }} > count.json && export GITHUB_RUN_NUMBER=$(cat count.json | jq .value)
       - name: Android Build
         run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - name: Sign app APK
