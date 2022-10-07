@@ -60,8 +60,8 @@ jobs:
           echo "${{secrets.android_keystore_asc}}" > upload-keystore.jks.asc
           gpg -d --passphrase "${{ secrets.android_key_passphrase }}" --batch key.properties.asc > key.properties
           gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
+          cp upload-keystore.jks ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release/signingKey.jks
           export ALIAS=$(awk -F "=" '/^keyAlias/{print $NF}' key.properties)
-          echo test
           export KEY=$(awk -F "=" '/^keyPassword/{print $NF}' key.properties)
           export STORE_FILE=$(awk -F "=" '/^storeFile/{print $NF}' key.properties)
           export BASE64_STORE=$(base64 upload-keystore.jks)
