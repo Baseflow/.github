@@ -11,6 +11,10 @@ on:
       environment: # options development|staging|production
         required: true
         type: string
+      build_number_api_url:
+        required: false
+        default: ''
+        type: string
 
     secrets:
       ios_provisioning_profile_password:
