@@ -94,9 +94,6 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
       - run: flutter build ipa --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER --export-options-plist=ios/export_options.plist -t ${{ inputs.target }} ${{inputs.custom_build_args}}
         working-directory: ${{ inputs.app-dir }}
-      - run: |
-          find .
-        working-directory: ${{ inputs.app-dir }}
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v1
         with:
