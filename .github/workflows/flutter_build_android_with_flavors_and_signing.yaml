@@ -73,7 +73,7 @@ jobs:
         working-directory: ${{ inputs.app-dir }}/android
       - name: Fetch Build Number
         if: ${{ inputs.build_number_api_url != '' }}
-        run: touch count.json && curl ${{ inputs.build_number_api_url }} > count.json && export GITHUB_RUN_NUMBER=$(cat count.json | jq .value)
+        run: touch count.json && curl ${{ inputs.build_number_api_url }} > count.json && cat count.json | jq .value && export GITHUB_RUN_NUMBER=$(cat count.json | jq .value)
       - name: Android Build
         run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - name: Sign app APK
