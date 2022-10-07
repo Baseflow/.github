@@ -61,6 +61,7 @@ jobs:
           gpg -d --passphrase "${{ secrets.android_key_passphrase }}" --batch key.properties.asc > key.properties
           gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
           export ALIAS=$(awk -F "=" '/^keyAlias/{print $NF}' key.properties)
+          echo test
           export KEY=$(awk -F "=" '/^keyPassword/{print $NF}' key.properties)
           export STORE_FILE=$(awk -F "=" '/^storeFile/{print $NF}' key.properties)
           export BASE64_STORE=$(base64 upload-keystore.jks)
@@ -69,9 +70,8 @@ jobs:
         run: flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
-        id: sign_app
         with:
-          releaseDirectory: ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release/
+          releaseDirectory: ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release
           signingKeyBase64: $BASE64_STORE
           alias: $ALIAS
           keyStorePassword: $KEY
@@ -80,7 +80,6 @@ jobs:
         uses: r0adkll/upload-google-play@v1.0.16
         with:
           serviceAccountJsonPlainText: ${{ secrets.play_store_gservice_account }}
-#          releaseFile: ${{inputs.app-dir}}/build/app/outputs/bundle/${{inputs.environment}}Release/app-${{inputs.environment}}-release.aab
           releaseFile: ${{steps.sign_app.outputs.signedReleaseFile}}
           status: 'draft'
           track: internal
