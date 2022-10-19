@@ -73,7 +73,7 @@ jobs:
           export BUILD_NUMBER=$GITHUB_RUN_NUMBER
           test -f count.json && export BUILD_NUMBER=$(cat count.json | jq .value)
           echo $BUILD_NUMBER
-          flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$GITHUB_RUN_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
+          flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$BUILD_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
       - name: Release APPBUNDLE to internal track
         uses: r0adkll/upload-google-play@v1.0.16
         with:
