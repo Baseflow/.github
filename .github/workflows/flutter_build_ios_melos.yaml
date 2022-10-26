@@ -45,7 +45,7 @@ jobs:
       - name: Download melos
         run: flutter pub global activate melos
       - name: Melos init
-        run: melos bootstrap && melos get && melos generate
+        run: melos bootstrap && melos get
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.ios_signing_key_asc }}
