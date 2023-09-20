@@ -42,7 +42,7 @@ jobs:
     steps:
       # Checkout the current GitHub repository.
       - name: Checkout GitHub repository on build agent
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Pre-build script
       - name: Runing pre-build script
@@ -55,6 +55,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          # use the build-in cache from Subosito
+          cache: true
 
       # Install Flutter (${{inputs.flutter-version}} stable) if flutter-version is specified.
       - name: Install Flutter (${{inputs.flutter-version}} stable)
@@ -63,6 +65,8 @@ jobs:
         with:
           channel: 'stable'
           flutter-version: ${{inputs.flutter-version}}
+          # use the build-in cache from Subosito
+          cache: true
 
       # Install the Melos Dart package.
       - name: Install melos
