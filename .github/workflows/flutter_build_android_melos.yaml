@@ -35,19 +35,19 @@ jobs:
     steps:
       # Checkout the current GitHub repository.
       - name: Checkout GitHub repository on build agent
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Pre-build script
       - name: Runing pre-build script
         if: ${{ inputs.pre-build-script != '' }}
         run: ${{ inputs.pre-build-script }}
 
-      # Install the correct JAVA version on the build agent.
-      - name: Install JAVA on build agent
-        uses: actions/setup-java@v3
+      # Ensure correct JAVA version is installed.
+      - uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options java-version
+          distribution: 'temurin'
           java-version: '17'
+          cache: 'gradle'
 
       # Install Flutter (latest stable) if flutter-version is not specified.
       - name: Install Flutter (latest stable)
@@ -55,6 +55,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          # use the build-in cache from Subosito
+          cache: true
 
       # Install Flutter (${{inputs.flutter-version}} stable) if flutter-version is specified.
       - name: Install Flutter (${{inputs.flutter-version}} stable)
@@ -63,6 +65,8 @@ jobs:
         with:
           channel: 'stable'
           flutter-version: ${{inputs.flutter-version}}
+          # use the build-in cache from Subosito
+          cache: true
 
       # Install the Melos Dart package.
       - name: Install melos
@@ -105,7 +109,7 @@ jobs:
 
       # Upload the production release to the internal test track on Google Play Store.
       - name: Release APPBUNDLE to internal track
-        uses: r0adkll/upload-google-play@v1.0.16
+        uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.play_store_gservice_account }}
           releaseFile: ${{ inputs.app-dir }}/build/app/outputs/bundle/productionRelease/app-production-release.aab
