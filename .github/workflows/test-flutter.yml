@@ -12,10 +12,13 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
+        # use the build-in cache from Subosito
+        cache: true
+        
     - run: flutter pub get
       working-directory: ${{ inputs.app-dir }}
     - run: flutter test
