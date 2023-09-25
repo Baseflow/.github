@@ -31,7 +31,7 @@ on:
         required: true
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: macos-latest
     steps:
       # Checkout the current GitHub repository.
       - name: Checkout GitHub repository on build agent
