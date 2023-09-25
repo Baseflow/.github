@@ -77,6 +77,11 @@ jobs:
         run: melos bootstrap && melos get
         working-directory: ${{ inputs.app-dir }}
 
+      # Generate files
+      - name: Melos generate
+        run: melos generate
+        working-directory: ${{ inputs.app-dir }}
+
       # Validate if the source code is formatted according to the Dart style guide (https://github.com/dart-lang/dart_style/wiki/Formatting-Rules).
       - name: Format
         run: melos format:set_exit_if_changed
