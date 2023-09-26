@@ -128,6 +128,7 @@ jobs:
       # Build a production release of the Flutter project.
       - name: Build iOS production release
         run: melos build:ios:runner
+        working-directory: ${{ inputs.app-dir }}
         env:
           ENVIRONMENT: ${{ inputs.environment }}
       
