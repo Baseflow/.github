@@ -117,7 +117,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.play_store_gservice_account }}
-          releaseFile: ${{ inputs.app-dir }}/build/app/outputs/bundle/${{ inputs.environment }}Release/app-${{ inputs.environment }}-release.aab
+          releaseFiles: ${{ github.workspace }}/${{ inputs.app-dir }}/build/app/outputs/bundle/${{ inputs.environment }}Release/app-${{ inputs.environment }}-release.aab
           status: 'draft'
           track: internal
           packageName: ${{ inputs.packageName }}
