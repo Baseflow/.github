@@ -118,6 +118,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.play_store_gservice_account }}
           releaseFiles: ${{ github.workspace }}/${{ inputs.app-dir }}/build/app/outputs/bundle/${{ inputs.environment }}Release/app-${{ inputs.environment }}-release.aab
+          mappingFile: ${{ github.workspace }}/${{ inputs.app-dir }}/build/app/outputs/mapping/${{ inputs.environment }}Release/mapping.txt
           status: 'draft'
           track: internal
           packageName: ${{ inputs.packageName }}
