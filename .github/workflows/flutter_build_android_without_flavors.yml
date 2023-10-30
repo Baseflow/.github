@@ -58,10 +58,6 @@ jobs:
         run: |
           echo "${{secrets.android_key_asc}}" > key.properties.asc
           echo "${{secrets.android_keystore_asc}}" > upload-keystore.jks.asc
-          cat key.properties.asc
-          cat upload-keystore.jks.asc
-          echo "${{ secrets.android_key_passphrase }}"
-          echo "${{ secrets.android_keystore_passphrase }}"
           gpg -d --passphrase "${{ secrets.android_key_passphrase }}" --batch key.properties.asc > key.properties
           gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
         working-directory: ${{ inputs.app-dir }}/android
