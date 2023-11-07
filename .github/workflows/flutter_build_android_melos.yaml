@@ -121,5 +121,4 @@ jobs:
           mappingFile: ${{ github.workspace }}/${{ inputs.app-dir }}/build/app/outputs/mapping/${{ inputs.environment }}Release/mapping.txt
           status: 'draft'
           track: internal
-          changesNotSentForReview: true
           packageName: ${{ inputs.packageName }}
