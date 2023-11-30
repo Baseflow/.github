@@ -43,7 +43,7 @@ jobs:
         run: ${{ inputs.pre-build-script }}
 
       # Ensure correct JAVA version is installed.
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
