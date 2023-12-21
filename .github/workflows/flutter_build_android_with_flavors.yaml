@@ -67,7 +67,7 @@ jobs:
         working-directory: ${{ inputs.app-dir }}/android
       - name: Android Build
         run: |
-          export BUILD_NUMBER=$(($GITHUB_RUN_NUMBER + inputs.build_number_starting_point))
+          export BUILD_NUMBER=export BUILD_NUMBER=$(($GITHUB_RUN_NUMBER + ${{ inputs.build_number_starting_point }} ))
           test -f count.json && export BUILD_NUMBER=$(cat count.json | jq .value)
           echo $BUILD_NUMBER
           flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$BUILD_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
