@@ -23,10 +23,10 @@ on:
         required: false
         default: ''
         type: string
-      build_number_api_url:
+      build_number_starting_point:
         required: false
-        default: ''
-        type: string
+        default: 0
+        type: number
 
     secrets:
       android_key_asc:
@@ -65,12 +65,9 @@ jobs:
           gpg -d --passphrase "${{ secrets.android_key_passphrase }}" --batch key.properties.asc > key.properties
           gpg -d --passphrase "${{ secrets.android_keystore_passphrase }}" --batch upload-keystore.jks.asc > upload-keystore.jks
         working-directory: ${{ inputs.app-dir }}/android
-      - name: Fetch Build Number
-        if: ${{ inputs.build_number_api_url != '' }}
-        run: touch count.json && curl ${{ inputs.build_number_api_url }} > count.json && cat count.json | jq .value
       - name: Android Build
         run: |
-          export BUILD_NUMBER=$GITHUB_RUN_NUMBER
+          export BUILD_NUMBER=$(($GITHUB_RUN_NUMBER + inputs.build_number_starting_point))
           test -f count.json && export BUILD_NUMBER=$(cat count.json | jq .value)
           echo $BUILD_NUMBER
           flutter build appbundle --release --flavor=${{ inputs.environment }} --build-number=$BUILD_NUMBER -t ${{ inputs.target }} ${{inputs.custom_build_args}}
